@@ -9,9 +9,9 @@ package org.eclipse.rdf4j.query.parser.serql;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 
-import org.eclipse.rdf4j.common.io.FileUtil;
 import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.sail.NotifyingSail;
 import org.eclipse.rdf4j.sail.nativerdf.NativeStore;
@@ -45,7 +45,7 @@ public class NativeSeRQLQueryTest extends SeRQLQueryTestCase {
 
 	@Override
 	protected NotifyingSail newSail() throws IOException {
-		dataDir = FileUtil.createTempDir("nativestore");
+		dataDir = Files.createTempDirectory("nativestore").toFile();
 		return new NativeStore(dataDir, "spoc");
 	}
 }
