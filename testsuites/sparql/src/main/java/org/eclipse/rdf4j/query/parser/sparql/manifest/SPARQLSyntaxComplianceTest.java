@@ -176,9 +176,10 @@ public abstract class SPARQLSyntaxComplianceTest extends SPARQLComplianceTest {
 
 	@Override
 	protected void runTest() throws Exception {
-		InputStream stream = new URL(queryFileURL).openStream();
-		String query = IOUtil.readString(new InputStreamReader(stream, StandardCharsets.UTF_8));
-		stream.close();
+		String query;
+		try (InputStream stream = new URL(queryFileURL).openStream()) {
+			query = IOUtil.readString(new InputStreamReader(stream, StandardCharsets.UTF_8));
+		}
 
 		try {
 			ParsedOperation operation = parseOperation(query, queryFileURL);

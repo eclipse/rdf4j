@@ -107,7 +107,7 @@ public class HDTParser extends AbstractRDFParser {
 		HDTDictionarySection objects = null;
 		HDTTriplesSection section = null;
 
-		// not using try-with-resources, since the counter is needed in the catch clause (JDK8)
+		// not using try-with-resources, since the counter is needed in the catch clause
 		CountingInputStream bis = new CountingInputStream(in);
 		try {
 			reportLocation(0, -1);

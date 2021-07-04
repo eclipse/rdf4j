@@ -411,13 +411,11 @@ public abstract class AbstractQueryResultIOTest {
 		writer.handleLinks(links);
 		writer.endHeader();
 		writer.endHeader();
-		try {
+		try (input) {
 			while (input.hasNext()) {
 				BindingSet bindingSet = input.next();
 				writer.handleSolution(bindingSet);
 			}
-		} finally {
-			input.close();
 		}
 		writer.endQueryResult();
 
@@ -446,7 +444,7 @@ public abstract class AbstractQueryResultIOTest {
 		writer.startHeader();
 		writer.handleLinks(links);
 		writer.endHeader();
-		try {
+		try (input) {
 			while (input.hasNext()) {
 				BindingSet bindingSet = input.next();
 				writer.handleSolution(bindingSet);
@@ -455,8 +453,6 @@ public abstract class AbstractQueryResultIOTest {
 			fail("Expected exception when calling handleSolution without startQueryResult");
 		} catch (IllegalStateException ise) {
 			// Expected exception
-		} finally {
-			input.close();
 		}
 	}
 
