@@ -7,11 +7,13 @@
  *******************************************************************************/
 package org.eclipse.rdf4j.repository;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.eclipse.rdf4j.IsolationLevel;
 import org.eclipse.rdf4j.IsolationLevels;
+import org.eclipse.rdf4j.model.BNode;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
@@ -22,6 +24,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author jeen
@@ -207,6 +212,28 @@ public abstract class RDFSchemaRepositoryConnectionTest extends RepositoryConnec
 		assertTrue("input triple should be explicitly present",
 				testCon.hasStatement(FOAF.PERSON, RDF.TYPE, RDFS.CLASS, false));
 
+	}
+
+	@Test
+	public void addingAndClearing() {
+		BNode bNode = vf.createBNode();
+
+		try (RepositoryConnection connection = testRepository.getConnection()) {
+			connection.begin(level);
+			connection.add(bNode, RDF.TYPE, RDFS.RESOURCE);
+			connection.commit();
+
+			assertTrue(connection.hasStatement(bNode, RDF.TYPE, RDFS.RESOURCE, false));
+
+			connection.begin(level);
+			connection.clear();
+			connection.commit();
+
+			// bug with the SchemaCachingRDFSInferencer and the NativeStore causes inferred statement to exist after
+			// commit()
+			assertFalse(connection.hasStatement(bNode, RDF.TYPE, RDFS.RESOURCE, true));
+
+		}
 	}
 
 }
